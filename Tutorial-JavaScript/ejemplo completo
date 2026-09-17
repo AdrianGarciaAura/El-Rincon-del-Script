@@ -1,0 +1,82 @@
+// ===================================================
+// EJEMPLO PROCESADOR DE PEDIDOS
+// ===================================================
+
+// 1. CLASE FECHA: Obtener fecha actual
+const fechaHoy = new Date();
+const fechaFormateada = fechaHoy.toLocaleDateString();
+
+// 2. OBJETOS: Datos de la tienda (propiedades y método)
+const tienda = {
+  nombre: "Tech Store",
+  impuestoIVA: 0.21, // 21%
+  
+  // Método del objeto usando 'this'
+  saludar() {
+    console.log(`=== SISTEMA DE ${this.nombre.toUpperCase()} (${fechaFormateada}) ===\n`);
+  }
+};
+
+// Ejecutamos el método del objeto
+tienda.saludar();
+
+// 3. ARRAYS Y TIPOS DE DATOS: Lista de pedidos (Simula filas de Google Sheets)
+let pedidos = [
+  { id: 101, cliente: "Carlos Pérez", producto: "LAPTOP", precio: 800, pagado: true },
+  { id: 102, cliente: "Ana Gómez", producto: "teclado", precio: 50, pagado: false },
+  { id: 103, cliente: "Luis Martínez", producto: "Monitor", precio: 300, pagado: true }
+];
+
+// Método de Array: Añadir un elemento al final (.push)
+pedidos.push({ id: 104, cliente: "Marta R.", producto: "mouse", precio: 25, pagado: true });
+
+// 4. FUNCIONES: Calcular precio final con impuestos
+function calcularPrecioFinal(precioBase, impuesto) {
+  let total = precioBase + (precioBase * impuesto);
+  return total; // Devuelve el valor
+}
+
+// Variable para acumular total recaudado
+let totalVentas = 0;
+
+// 5. BUCLE (.forEach): Recorrer el Array pedido por pedido
+console.log("--- PROCESANDO LISTA DE PEDIDOS ---");
+
+pedidos.forEach(function(pedido) {
+  // Funciones de String: Limpiar y formatear texto
+  let productoFormateado = pedido.producto.toLowerCase();
+
+  // 6. OPERADORES Y CONDICIONALES (Toma de decisiones)
+  if (pedido.pagado === true && pedido.precio > 0) {
+    
+    // Llamada a la función
+    let precioConIVA = calcularPrecioFinal(pedido.precio, tienda.impuestoIVA);
+    totalVentas += precioConIVA; // Operador matemático acumulador
+
+    // Función de String (.includes) para buscar texto
+    let esVIP = pedido.cliente.includes("Pérez") ? " [Cliente VIP]" : "";
+
+    // Plantilla de texto (Template Literal)
+    console.log(`✅ Pedido #${pedido.id} (${pedido.cliente}${esVIP}): ${productoFormateado} -> $${precioConIVA}`);
+
+  } else if (!pedido.pagado) { // Operador lógico NOT (!)
+    console.log(`⚠️ Pedido #${pedido.id} (${pedido.cliente}): PENDIENTE DE PAGO`);
+  } else {
+    console.log(`❌ Pedido #${pedido.id}: Precio no válido`);
+  }
+});
+
+// Mostrar resultado final acumulado
+console.log(`\n💰 Total recaudado hoy: $${totalVentas}`);
+
+// 7. MANEJO DE ERRORES: try...catch (Cinturón de seguridad)
+console.log("\n--- PRUEBA DE MANEJO DE ERRORES ---");
+
+try {
+  // Intentamos acceder a algo que no existe para provocar un error
+  console.log(pedidoInexistente.cliente);
+} catch (error) {
+  console.log("🛡️ Error controlado: Intentaste acceder a una variable que no existe, pero el programa no colapsó.");
+}
+
+console.log("\n=== FIN DEL PROGRAMA ===");
